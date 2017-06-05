@@ -127,7 +127,7 @@ $(document).ready(function () {
 <h1>Introduction to R</h1>
 <div id="getting-started" class="section level2">
 <h2>Getting Started</h2>
-<p>In order to go through these notes you will need to have downloaded both <a href="https://cran.r-project.org/">R</a> and <a href="https://www.rstudio.com/products/rstudio/download">RStudio</a>. If you need extra guidance please read <a href="http://www.datacarpentry.org/R-ecology-lesson/index.html#setup_instructions">this help page</a>.</p>
+<p>In order to go through these notes you will need to have downloaded both <a href="https://cran.r-project.org/">R</a> and <a href="https://www.rstudio.com/products/rstudio/download">RStudio Desktop</a>. If you need extra guidance for installing please read <a href="http://www.datacarpentry.org/R-ecology-lesson/index.html#setup_instructions">this help page</a>.</p>
 </div>
 <div id="why-learn-r" class="section level2">
 <h2>Why learn R?</h2>
@@ -161,6 +161,7 @@ An example of a good working directory for this session:</p>
 <p>data/</p>
 </blockquote>
 <p>Use this folder to store your raw data and intermediate datasets you may create for the need of a particular analysis. For the sake of transparency and future reference, you should always keep a copy of your raw data accessible and do as much of your data cleanup and preprocessing programmatically (i.e., with scripts, rather than manually) as possible. Separating raw data from processed data is also a good idea.</p>
+<p>Move the data file we were using earlier into this folder now.</p>
 <blockquote>
 <p>documents/</p>
 </blockquote>
@@ -170,6 +171,10 @@ An example of a good working directory for this session:</p>
 </blockquote>
 <p>This would be the location to keep your R scripts for different analyses or plotting, and potentially a separate folder for your functions (more on that later).</p>
 <p>Take some time now to organise your working directory.</p>
+<p>We then need to tell R where our working directory is.</p>
+<pre class="r"><code>setwd(&quot;Path\\To\\Your\\Directory&quot;)</code></pre>
+<p>TIP: On a Windows machine you can get the path to the working directory using the file explorer - copy and paste from the address bar, but you’ll need to change the single backslashes to doubles.</p>
+<p>On a Mac machine, in the file explorer, right click a file in the working directory &gt; Get Info &gt; Copy path from ‘Where’.</p>
 <hr />
 </div>
 <div id="using-a-script" class="section level2">
