@@ -181,7 +181,7 @@ Save the script:<br />
 <code>File &gt; Save</code></p>
 <p>You should save the file as <code>IntroToR.R</code> or something similar. All R scripts end with <code>.R</code>.</p>
 <p>For the rest of the tutorial, copy and paste all code in grey boxes into your script (remembering to save regularly). You can then run the code from there.</p>
-<p>The first thing you will need to do is to tell R where our working directory is. This will often be the first thing you put in your script for any project you work on. Copy and paste the code chunk into your script, then ‘execute’ or ‘run’ the code by either placing your cursor on the line, or highlighting the line(s), and pressing <kbd>ctrl</kbd> + <kbd>Enter</kbd> (<kbd>cmd</kbd> + <kbd>Enter</kbd> on Macs). In your <strong>console</strong> you should then get the output seen in the white box.</p>
+<p>The first thing you will need to do is to tell R where our working directory is. This will often be the first thing you put in your script for any project you work on. Copy and paste the code chunk into your script (changing the path in &quot; &quot; to match your path), then ‘execute’ or ‘run’ the code by either placing your cursor on the line, or highlighting the line(s), and pressing <kbd>ctrl</kbd> + <kbd>Enter</kbd> (<kbd>cmd</kbd> + <kbd>Enter</kbd> on Macs). In your <strong>console</strong> you should then get the output seen in the white box.</p>
 <pre class="r"><code>setwd(&quot;Path\\To\\Your\\Directory&quot;)</code></pre>
 <p>TIP: On a Windows machine you can get the path to the working directory using the file explorer - copy and paste from the address bar, but you’ll need to change the single backslashes to doubles.</p>
 <p>On a Mac machine, in the file explorer, right click a file in the working directory &gt; Get Info &gt; Copy path from ‘Where’.</p>
@@ -199,7 +199,7 @@ Save the script:<br />
 <pre><code>## [1] 5</code></pre>
 <pre class="r"><code>101 * 5</code></pre>
 <pre><code>## [1] 505</code></pre>
-<p>If console has <code>&gt;</code> it is ready to accept a new line of code, however, if the console is displayinbg a <code>+</code>, it is expecting more code. If you’ve made a mistake in the code you’ve been running, press the <kbd>Esc</kbd> key and start again.</p>
+<p>If the console has a <code>&gt;</code> at the edge it is ready to accept a new line of code, however, if the console is displaying a <code>+</code>, it is expecting more code. If you’ve made a mistake in the code you’ve been running, press the <kbd>Esc</kbd> key and start again.</p>
 <p>In order to do some more complicated maths, we will need to <em>assign</em> our <em>values</em> to <em>objects</em>:</p>
 <pre class="r"><code>weight_kg &lt;- 55
 weight_kg</code></pre>
@@ -216,8 +216,8 @@ weight_kg</code></pre>
 <p>Assigning <code>weight_kg * 2.2</code> to a new value does not change the value in <code>weight_kg</code>. <strong>Check this for yourself</strong>.</p>
 <p>However, the following line of code will change the value assigned to <code>weight_kg</code>. Run the line of code, then check the value now assigned to <code>weight_kg</code>.</p>
 <pre class="r"><code>weight_kg &lt;- weight_kg * 100</code></pre>
-<p>When naming objects you want the name to be explicit (this might included the units that were measured, for example) but not too long.</p>
-<p>We can also assign ‘factors’ (i.e. <code>strings</code>) to objects as well:</p>
+<p>When naming objects you want the name to be explicit (this might included the units that were measured, for example) but not too long. Object names are case sensitive.</p>
+<p>We can also assign ‘characters’ to objects as well:</p>
 <pre class="r"><code>pets &lt;- &quot;dog&quot;
 pets</code></pre>
 <pre><code>## [1] &quot;dog&quot;</code></pre>
@@ -232,33 +232,33 @@ pets</code></pre>
 <pre class="r"><code>2 + 2 ## Some simple addition</code></pre>
 <pre><code>## [1] 4</code></pre>
 <pre class="r"><code>weight_kg ## The weight of the field mouse in kgs</code></pre>
-<pre><code>## [1] 55</code></pre>
+<pre><code>## [1] 5500</code></pre>
 <pre class="r"><code>pets ## List of possible pets. TODO: Figure out how to add more!</code></pre>
 <pre><code>## [1] &quot;dog&quot;</code></pre>
-<p>To put a comment type one or more hash’s <code>#</code>. What you type after the <code>#</code> will be in your script, but will not be executed by R. This also means, that if you don’t want to run a particular line of code, you can comment it out and not worry about accidently running it.</p>
+<p>To put a comment type one or more hash’s <code>#</code>. What you type after the <code>#</code> will be in your script, but will not be executed by R. This also means that if you don’t want to run a particular line of code you can comment it out and not worry about accidently running it.</p>
 <p>It is good practice to put comments in your code, and your future-self will thank you.</p>
 </div>
 <div id="functions" class="section level2">
 <h2>Functions</h2>
-<p>Although it might be a while before you write your functions, its important to understand what functions are and how they work, as you will be using some anytime you use R.</p>
-<p>Functions are chunks of code that automate complicated or simple sets of commands. Many functions are predefined, or can be made available by importing R packages (more on that later). A function usually gets one or more inputs called <strong>arguments</strong>. Functions often (but not always) return a <strong>value</strong>. A typical example would be the function <code>sqrt()</code>. The input (the argument) must be a number, and the return value (in fact, the output) is the square root of that number. Executing a function (‘running it’) is called calling the function. An example of a function call is:</p>
+<p>Although it might be a while before you write your functions, its important to understand what functions are and how they work, as you will be using them everytime you use R.</p>
+<p>Functions are chunks of code that automate complicated or simple sets of commands. Many functions are predefined, or can be made available by importing R packages (more on that later). A function comprises of a name, followed by brackets. Inside the brackets a function expects one or more inputs called <strong>arguments</strong>. Functions often (but not always) return a <strong>value</strong>. A typical example would be the function <code>sqrt()</code>. The input (the argument) must be a number, and the return value (also known as the the output) is the square root of that number. Executing a function (‘running it’) is called ‘calling the function’. An example of a function call is:</p>
 <pre class="r"><code>a &lt;- 8
 b &lt;- sqrt(a)
 b</code></pre>
 <pre><code>## [1] 2.828427</code></pre>
-<p>Here, the value of <code>a</code> is given to the <code>sqrt()</code> function, the <code>sqrt()</code> function calculates the square root, and returns the value which is then assigned to variable <code>b</code>. This function is very simple, because it takes just one argument.</p>
+<p>Here, the value of <code>a</code> is given to the <code>sqrt()</code> function. The <code>sqrt()</code> function calculates the square root of the first argument, in this case <code>a</code>, and returns the value which is then assigned to variable <code>b</code>. This function is very simple, because it takes just one argument.</p>
 <p>The return ‘value’ of a function need not be numerical (like that of <code>sqrt()</code>), and it also does not need to be a single item: it can be a set of things.</p>
 </div>
 <div id="vectors" class="section level2">
 <h2>Vectors</h2>
-<p>A vector is composed by a series of values, which can be either numbers or characters. We can assign a series of values to a vector using the <code>c()</code> function. For example we can create a vector of animal weights and assign it to a new object <code>weight_g</code>:</p>
+<p>A vector is composed of a series of values, which can be either numbers or characters. We can assign a series of values to a vector using the <code>c()</code> function. For example we can create a vector of animal weights and assign it to a new object <code>weight_g</code>:</p>
 <pre class="r"><code>weight_g &lt;- c(50, 60, 65, 82)
 weight_g</code></pre>
 <pre><code>## [1] 50 60 65 82</code></pre>
 <pre class="r"><code>pets &lt;- c(&quot;dog&quot;, &quot;cat&quot;, &quot;rabbit&quot;)
 pets</code></pre>
 <pre><code>## [1] &quot;dog&quot;    &quot;cat&quot;    &quot;rabbit&quot;</code></pre>
-<p>The quotes around “dog”, “cat”, etc. are essential here. Without the quotes R will assume there are objects called dog, cat and rabbit. As these objects don’t exist in R’s memory, there will be an error message.</p>
+<p>The quotes around “dog”, “cat”, etc. are essential here. Without the quotes R will assume there are objects called dog, cat and rabbit. As these objects don’t exist, there will be an error message.</p>
 <p>There are many functions that allow you to inspect the content of a vector. <code>length()</code> tells you how many elements are in a particular vector:</p>
 <pre class="r"><code>length(weight_g)</code></pre>
 <pre><code>## [1] 4</code></pre>
@@ -269,7 +269,7 @@ pets</code></pre>
 <pre><code>## [1] &quot;numeric&quot;</code></pre>
 <pre class="r"><code>class(pets)</code></pre>
 <pre><code>## [1] &quot;character&quot;</code></pre>
-<p>The function <code>str()</code> provides an overview of the structure of an object and its elements. It is a useful function when working with large and complex objects:</p>
+<p>The function <code>str()</code> provides an overview of the <strong>str</strong>ucture of an object and its elements. It is a useful function when working with large and complex objects:</p>
 <pre class="r"><code>str(weight_g)</code></pre>
 <pre><code>##  num [1:4] 50 60 65 82</code></pre>
 <pre class="r"><code>str(pets)</code></pre>

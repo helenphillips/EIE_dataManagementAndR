@@ -40,7 +40,7 @@ Within it:
 
 Use this folder to store your raw data and intermediate datasets you may create for the need of a particular analysis. For the sake of transparency and future reference, you should always keep a copy of your raw data accessible and do as much of your data cleanup and preprocessing programmatically (i.e., with scripts, rather than manually) as possible. Separating raw data from processed data is also a good idea. 
 
-Move the data file we were using earlier into this folder now.
+__Move the data file we were using earlier into this folder now.__
 
 > documents/ 
 
@@ -68,7 +68,7 @@ You should save the file as `IntroToR.R` or something similar. All R scripts end
 
 For the rest of the tutorial, copy and paste all code in grey boxes into your script (remembering to save regularly). You can then run the code from there.
 
-The first thing you will need to do is to tell R where our working directory is. This will often be the first thing you put in your script for any project you work on. Copy and paste the code chunk into your script, then 'execute' or 'run' the code by either placing your cursor on the line, or highlighting the line(s), and pressing <kbd>ctrl</kbd> + <kbd>Enter</kbd> (<kbd>cmd</kbd> + <kbd>Enter</kbd> on Macs). In your __console__ you should then get the output seen in the white box.
+The first thing you will need to do is to tell R where our working directory is. This will often be the first thing you put in your script for any project you work on. Copy and paste the code chunk into your script (changing the path in " " to match your path), then 'execute' or 'run' the code by either placing your cursor on the line, or highlighting the line(s), and pressing <kbd>ctrl</kbd> + <kbd>Enter</kbd> (<kbd>cmd</kbd> + <kbd>Enter</kbd> on Macs). In your __console__ you should then get the output seen in the white box.
 
 ```{r, eval = FALSE}
 setwd("Path\\To\\Your\\Directory")
@@ -94,7 +94,7 @@ Aswell as running fancy code, R can also be used as a basic calculator.
 101 * 5
 ``` 
 
-If console has `>`  it is ready to accept a new line of code, however, if the console is displayinbg a `+`, it is expecting more code. If you've made a mistake in the code you've been running, press the <kbd>Esc</kbd> key and start again.
+If the console has a `>` at the edge it is ready to accept a new line of code, however, if the console is displaying a `+`, it is expecting more code. If you've made a mistake in the code you've been running, press the <kbd>Esc</kbd> key and start again.
 
 In order to do some more complicated maths, we will need to _assign_ our _values_ to _objects_:
 ```{r}
@@ -121,12 +121,12 @@ weight_lbs <- weight_kg * 2.2
 Assigning `weight_kg * 2.2` to a new value does not change the value in `weight_kg`. __Check this for yourself__.
 
 However, the following line of code will change the value assigned to `weight_kg`. Run the line of code, then check the value now assigned to `weight_kg`.
-```{r eval = FALSE}
+```{r}
 weight_kg <- weight_kg * 100
 ```
-When naming objects you want the name to be explicit (this might included the units that were measured, for example) but not too long.
+When naming objects you want the name to be explicit (this might included the units that were measured, for example) but not too long. Object names are case sensitive.
 
-We can also assign 'factors' (i.e. `strings`) to objects as well:
+We can also assign 'characters' to objects as well:
 ```{r}
 pets <- "dog"
 pets
@@ -148,14 +148,14 @@ weight_kg ## The weight of the field mouse in kgs
 pets ## List of possible pets. TODO: Figure out how to add more!
 ```
 
-To put a comment type one or more hash's `#`. What you type after the `#` will be in your script, but will not be executed by R. This also means, that if you don't want to run a particular line of code, you can comment it out and not worry about accidently running it.
+To put a comment type one or more hash's `#`. What you type after the `#` will be in your script, but will not be executed by R. This also means that if you don't want to run a particular line of code you can comment it out and not worry about accidently running it.
 
 It is good practice to put comments in your code, and your future-self will thank you.
 
 ## Functions
-Although it might be a while before you write your functions, its important to understand what functions are and how they work, as you will be using some anytime you use R.
+Although it might be a while before you write your functions, its important to understand what functions are and how they work, as you will be using them everytime you use R.
 
-Functions are chunks of code that automate complicated or simple sets of commands. Many functions are predefined, or can be made available by importing R packages (more on that later). A function usually gets one or more inputs called __arguments__. Functions often (but not always) return a __value__. A typical example would be the function `sqrt()`. The input (the argument) must be a number, and the return value (in fact, the output) is the square root of that number. Executing a function ('running it') is called calling the function. An example of a function call is:
+Functions are chunks of code that automate complicated or simple sets of commands. Many functions are predefined, or can be made available by importing R packages (more on that later). A function comprises of a name, followed by brackets. Inside the brackets a function expects one or more inputs called __arguments__. Functions often (but not always) return a __value__. A typical example would be the function `sqrt()`. The input (the argument) must be a number, and the return value (also known as the the output) is the square root of that number. Executing a function ('running it') is called 'calling the function'. An example of a function call is:
 
 ```{r}
 a <- 8
@@ -163,14 +163,14 @@ b <- sqrt(a)
 b
 ```
 
-Here, the value of `a` is given to the `sqrt()` function, the `sqrt()` function calculates the square root, and returns the value which is then assigned to variable `b`. This function is very simple, because it takes just one argument.
+Here, the value of `a` is given to the `sqrt()` function. The `sqrt()` function calculates the square root of the first argument, in this case `a`, and returns the value which is then assigned to variable `b`. This function is very simple, because it takes just one argument.
 
 The return 'value' of a function need not be numerical (like that of `sqrt()`), and it also does not need to be a single item: it can be a set of things.
 
 ## Vectors
 
 
-A vector is composed by a series of values, which can be either numbers or characters. We can assign a series of values to a vector using the `c()` function. For example we can create a vector of animal weights and assign it to a new object `weight_g`:
+A vector is composed of a series of values, which can be either numbers or characters. We can assign a series of values to a vector using the `c()` function. For example we can create a vector of animal weights and assign it to a new object `weight_g`:
 
 ```{r}
 weight_g <- c(50, 60, 65, 82)
@@ -179,7 +179,7 @@ weight_g
 pets <- c("dog", "cat", "rabbit")
 pets
 ```
-The quotes around "dog", "cat", etc. are essential here. Without the quotes R will assume there are objects called dog, cat and rabbit. As these objects don't exist in R's memory, there will be an error message.
+The quotes around "dog", "cat", etc. are essential here. Without the quotes R will assume there are objects called dog, cat and rabbit. As these objects don't exist, there will be an error message.
 
 There are many functions that allow you to inspect the content of a vector. `length()` tells you how many elements are in a particular vector:
 
@@ -193,13 +193,13 @@ An important feature of a vector, is that all of the elements are the same type 
 class(weight_g)
 class(pets)
 ```
-The function `str()` provides an overview of the structure of an object and its elements. It is a useful function when working with large and complex objects:
+The function `str()` provides an overview of the <strong>str</strong>ucture of an object and its elements. It is a useful function when working with large and complex objects:
 
 ```{r}
 str(weight_g)
 str(pets)
 ```
-You can use the `c()` function to add other elements to your vector:
+You can use the `c()` function (short for __concatenate__) to add other elements to your vector:
 
 ```{r}
 weight_g <- c(weight_g, 90) # add to the end of the vector
@@ -217,7 +217,7 @@ We just saw 2 of the 6 main vector types (or data types) that R uses: __"charact
 * `"complex"` to represent complex numbers with real and imaginary parts (e.g., 1+4i) and that's all we're going to say about them
 * `"raw"` that we won't discuss further  
 
-Vectors are one of the many data structures that R uses. Other important ones are lists (`list`), matrices (`matrix`), data frames (`data.frame`), factors (`factor`) and arrays (`array`).
+Vectors are one of the many data structures that R uses. Other important ones are lists (`list`), matrices (`matrix`), data frames (`data.frame`), factors (`factor`) and arrays (`array`). We will use dataframes and factors later.
 
 ## Subsetting
 
@@ -254,13 +254,21 @@ weight_g > 50
 weight_g[weight_g > 50]
 ```
 
-You can combine multiple tests using `&` (both conditions are true, AND) or | (at least one of the conditions is true, OR):
+
+
+Here, `<` stands for "less than", `>` for "greater than", `>=` for "greater than or equal to", and `==` for "equal to". The double equal sign `==` is a test for numerical equality between the left and right hand sides, and should not be confused with the single `=` sign, which can perform variable assignment (similar to `<-`).
+
+You can combine multiple tests using `|`, which tests whether at least one of the conditions is true (i.e., OR):
 ```{r}
-weight_g[weight_g < 30 | weight_g > 50]
-weight_g[weight_g >= 30 & weight_g == 21]
+weight_g[weight_g < 30 | weight_g > 50] # Which values are less than 30 OR greater than 50
 ```
 
-Here, `<` stands for "less than", `>` for "greater than", `>=` for "greater than or equal to", and `==` for "equal to". The double equal sign `==` is a test for numerical equality between the left and right hand sides, and should not be confused with the single `=` sign, which performs variable assignment (similar to `<-`).
+You can also combine multiple tests using `&`, which tests whether both conditions are true (i.e., AND):
+
+```{r}
+weight_g[weight_g >= 30 & weight_g == 21] # Which values are greater than or equal to 30 AND eual to 21
+```
+
 
 A common task is to search for certain strings in a vector. One could use the "or" operator | to test for equality to multiple values, but this can quickly become tedious. The function `%in%` allows you to test if any of the elements of a search vector are found:
 
@@ -301,14 +309,14 @@ str(surveys)
 We already saw how the functions `head()` and `str()` can be useful to check the content and the structure of a data frame. Here is a non-exhaustive list of functions to get a sense of the content/structure of the data. When you load data into R, it is a good idea to use some or all of these functions so that you fully understand your dataframe.  __Try them out__.
 
 * Size:
-    + `dim(surveys)` - returns a vector with the number of rows in the first element, and the number of columns as the second element (the + dimensions of the object)
+    + `dim(surveys)` - returns a vector with the number of rows in the first element, and the number of columns as the second element (the <strong>dim</strong>ensions of the object)
     + `nrow(surveys)` - returns the number of rows
     + `ncol(surveys)` - returns the number of columns
 * Content:
     + `head(surveys)` - shows the first 6 rows
     + `tail(surveys)` - shows the last 6 rows
 * Names:
-    + `names(surveys)` - returns the column names (synonym of colnames() for data.frame objects)
+    + `names(surveys)` - returns the column names
     + `rownames(surveys)` - returns the row names
 * Summary:
     + `str(surveys)` - structure of the object and information about the class, length and content of each column
@@ -340,12 +348,39 @@ You can also exclude certain parts of a data frame using the "-" sign:
 ```{r eval = FALSE}
 surveys[,-1]          # The whole data frame, except the first column
 ```
-As well as using numeric values to subset a data.frame (or matrix), columns can be called by name, using one of the four following notations:
+As well as using numeric values to subset a data.frame (or matrix), columns can be called by name, using one of the following notations:
 ```{r eval = FALSE}
 surveys["species_id"]       # Result is a data.frame
 surveys$species_id          # Result is a vector
 ```
+
+Note, as we want to use the column `species_id`, we need to tell R that `species_id` is from the dataframe `surveys`. We do this by using the `$` symbol.
+
 RStudio knows about the columns in your data frame, so you can take advantage of the __autocompletion feature__ to get the full and correct column name.
+
+## Adding a column to a dataframe
+
+We can add columns to a dataframe easily. For example, we want to add a column which specifies the name of the original data collector.  We will call the column `recorder`
+
+```{r}
+surveys$recorder <- "Helen" ## For characters we need the quotations
+```
+
+For every row in `survey`, we have assigned the recorder as 'Helen'.
+
+We can completely remove this column by setting it to `NULL`.
+
+```{r}
+surveys$recorder <- NULL
+```
+
+We could also add a column that is the weight in pounds. We would calculate this from the current column `weight`.
+
+```{r}
+surveys$weight_lbs <- surveys$weight * 2.2
+```
+
+Note, we still need the `$` symbol, as we are using the `weight` column from the `surveys` dataframe, and not the previously create variable.
 
 # Factors
 When we did `str(surveys)` we saw that several of the columns consist of integers, however, the columns `genus`, `species`, `sex`, `plot_type` are of a special class called a __factor__. Factors are very useful and are actually something that make R particularly well suited to working with data.
@@ -377,7 +412,7 @@ In addition to males and females, there are about 1700 individuals for which the
 sex <- surveys$sex # Assign one column of the dataframe to a new vector
 head(sex)
 levels(sex)
-levels(sex)[1] <- "missing" # We are subsetting the factor levels, replacing just the first factor level
+levels(sex)[1] <- "missing" # We are subsetting the factor levels, assigning just the first factor level
 levels(sex)
 head(sex)
 ```
@@ -385,7 +420,7 @@ head(sex)
 # Libraries
 So far all the functions we have used have been in 'base' R, i.e., functions that are always available to you in R. However, useful functions also exist that don't come pre-installed with R, but we might want to use them. 
 
-Functions are often packaged and released as 'libraries' from __CRAN repository__, with one library containing multiple functions that deal with specific problems, tasks or workflows.
+Functions are often packaged and released as 'libraries' from the __CRAN repository__, with one library containing multiple functions that deal with specific problems, tasks or workflows.
 
 In later sessions you will use the library ``ggplot2`` to create figures in R. Let's install the library. This can be done with the `install.packages` function, which takes the name of the library as the first arguement:
 ```{r eval = FALSE}
@@ -395,7 +430,7 @@ This function downloads the library from the CRAN repository onto our computer, 
 
 Alternatively, you can use the __Packages__ tab on the __Files/Plots/Packages/Help/Viewer__ panel. Scroll until you find `ggplot2`, and click in the box. This will download and the load the library into your R. 
 
-In any R session when we want to use the functions contained in `ggplot2` (or any other external library), We will then need to load the library into R. It is good practice to load nessecary libraries at the top of the relevant scripts, using the `library` function.
+In any R session when we want to use the functions contained in `ggplot2` (or any other external library), We will need to load the library into R. It is good practice to load nessecary libraries at the top of the relevant scripts, using the `library` function.
 ```{r}
 library(ggplot2) # The warning message is because I am using a slightly older version of R
 ```
