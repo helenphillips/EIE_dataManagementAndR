@@ -171,10 +171,6 @@ An example of a good working directory for this session:</p>
 </blockquote>
 <p>This would be the location to keep your R scripts for different analyses or plotting, and potentially a separate folder for your functions (more on that later).</p>
 <p>Take some time now to organise your working directory.</p>
-<p>We then need to tell R where our working directory is.</p>
-<pre class="r"><code>setwd(&quot;Path\\To\\Your\\Directory&quot;)</code></pre>
-<p>TIP: On a Windows machine you can get the path to the working directory using the file explorer - copy and paste from the address bar, but you’ll need to change the single backslashes to doubles.</p>
-<p>On a Mac machine, in the file explorer, right click a file in the working directory &gt; Get Info &gt; Copy path from ‘Where’.</p>
 <hr />
 </div>
 <div id="using-a-script" class="section level2">
@@ -183,6 +179,15 @@ An example of a good working directory for this session:</p>
 <code>File &gt; New File &gt; R Script</code><br />
 Save the script:<br />
 <code>File &gt; Save</code></p>
+<p>You should save the file as <code>IntroToR.R</code> or something similar. All R scripts end with <code>.R</code>.</p>
+<p>For the rest of the tutorial, copy and paste all code in grey boxes into your script (remembering to save regularly). You can then run the code from there.</p>
+<p>The first thing you will need to do is to tell R where our working directory is. This will often be the first thing you put in your script for any project you work on.</p>
+<pre class="r"><code>setwd(&quot;Path\\To\\Your\\Directory&quot;)</code></pre>
+<p>TIP: On a Windows machine you can get the path to the working directory using the file explorer - copy and paste from the address bar, but you’ll need to change the single backslashes to doubles.</p>
+<p>On a Mac machine, in the file explorer, right click a file in the working directory &gt; Get Info &gt; Copy path from ‘Where’.</p>
+</div>
+<div id="r-as-a-calculator" class="section level2">
+<h2>R as a calculator</h2>
 <p>Aswell as running fancy code, R can also be used as a basic calculator. Copy and paste the following chunk of codes in the grey boxes into your R script (don’t forget to save it), then ‘execute’ or ‘run’ the code by either placing your cursor on the line, or highlighting the line(s), and pressing <kbd>ctrl</kbd> + <kbd>Enter</kbd> (<kbd>cmd</kbd> + <kbd>Enter</kbd> on Macs). In your <strong>console</strong> you should then get the output seen in the white box.</p>
 <pre class="r"><code>1 + 3</code></pre>
 <pre><code>## [1] 4</code></pre>

@@ -52,15 +52,6 @@ This would be the location to keep your R scripts for different analyses or plot
 
 Take some time now to organise your working directory.
 
-We then need to tell R where our working directory is. 
-
-```{r, eval = FALSE}
-setwd("Path\\To\\Your\\Directory")
-```
-
-TIP: On a Windows machine you can get the path to the working directory using the file explorer - copy and paste from the address bar, but you'll need to change the single backslashes to doubles.  
-
-On a Mac machine, in the file explorer, right click a file in the working directory > Get Info > Copy path from 'Where'.
 
 ***
 
@@ -72,6 +63,22 @@ Open a script:
 `File > New File > R Script`  
 Save the script:  
 `File > Save`  
+
+You should save the file as `IntroToR.R` or something similar. All R scripts end with `.R`.
+
+For the rest of the tutorial, copy and paste all code in grey boxes into your script (remembering to save regularly). You can then run the code from there.
+
+The first thing you will need to do is to tell R where our working directory is. This will often be the first thing you put in your script for any project you work on.
+
+```{r, eval = FALSE}
+setwd("Path\\To\\Your\\Directory")
+```
+
+TIP: On a Windows machine you can get the path to the working directory using the file explorer - copy and paste from the address bar, but you'll need to change the single backslashes to doubles.  
+
+On a Mac machine, in the file explorer, right click a file in the working directory > Get Info > Copy path from 'Where'.
+
+## R as a calculator
   
 Aswell as running fancy code, R can also be used as a basic calculator.  Copy and paste the following chunk of codes in the grey boxes into your R script (don't forget to save it), then 'execute' or 'run' the code by either placing your cursor on the line, or highlighting the line(s), and pressing <kbd>ctrl</kbd> + <kbd>Enter</kbd> (<kbd>cmd</kbd> + <kbd>Enter</kbd> on Macs). In your __console__ you should then get the output seen in the white box.
 
