@@ -1,0 +1,11 @@
+---
+title: "Main Page"
+author: "Darren Gillig, Nathaly Rokssana Guerrero Ramirez and Helen Phillips"
+date: "June 6, 2017"
+output: html_document
+---
+# Data Management and Introduction to R
+
+In the coming days the course notes for the EIE session on 8th June will appear.  
+
+Please check again later.
