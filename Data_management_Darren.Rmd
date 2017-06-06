@@ -1,0 +1,227 @@
+---
+title: 'EIE course: Data Management and Basic R'
+author: "Darren Giling (darren.giling@idiv.de)"
+date: "8 June 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+<br>
+<br>
+``` {r surveys, echo = FALSE}
+surveys <- read.csv('C:/dg45koti/Dropbox/Teaching/iDiv EIE scientific working course/portal_data_joined.csv')
+# more info on the data: http://www.datacarpentry.org/R-ecology-lesson/02-starting-with-data.html
+```
+
+## Summarising data
+
+First, let's simplify the dataset a little for our examples:
+```{r}
+surveys.sub <- surveys[surveys$year==2002 & surveys$species_id=="PB",]  # subset to one year and one species
+```
+
+<br>
+We can use the function summary() to look at summary statistics of all variables in a dataframe:
+```{r}
+summary(surveys.sub)
+```
+
+<br>
+Or, we can perform functions on particular varibles, e.g.:
+```{r}
+mean(surveys.sub$weight)          # mean
+mean(surveys.sub$weight, na.rm=T) # mean, NAs are ignored
+sd(surveys.sub$weight, na.rm=T)   # standard deviation
+```
+<br>
+Further, we can use tapply() to summarise variables by groups:
+```{r}
+tapply(surveys.sub$weight, INDEX=surveys.sub$sex, FUN=mean, na.rm=T)
+```
+<br>
+Notice there is an empty factor level because some records do not contain gender. If we wanted, we could remove the rows with missing records:
+```{r}
+levels(surveys.sub$sex)
+surveys.sub <- surveys.sub[surveys.sub$sex != "", ]   # "!=" means 'does not equal'
+surveys.sub <- droplevels(surveys.sub)                # drop the factor level "" from gender 
+tapply(surveys.sub$weight, INDEX=surveys.sub$sex, FUN=mean, na.rm=T)
+```
+
+<br>
+<br>
+
+## Manipulating dataframes
+A key strength of using R is its ability to manipulate data. You should aim to store your raw data in csv files that you don't alter and then perform all transformations, data merges etc within R. That way, you cannot accidently alter your original data and you can easily reproduce your analyses.
+
+### Binding vectors or dataframes
+We can bind together vectors using rbind (for rows) and cbind (for columns). Try with this simple example:
+```{r}
+var1 <- c("a", "b", "c", "d", "e")
+var2 <- 1:5
+rbind(var1, var2) # bind together rows
+cbind(var1,var2)  # bind together columns
+df1 <- as.data.frame(cbind(var1,var2))  # to create a new dataframe object out of these variables
+colnames(df1) <- c("treatment", "fish_count")
+```
+
+<br>
+
+### Merging dataframes
+
+Say you have two dataframes and you want to merge them based on shared columns. First lets create a second simple dataframe:
+```{r}
+df2 <- as.data.frame(cbind(c("a","c","d","f","g"),10:14))
+colnames(df2) <- c("treatment", "turtle_count")
+```
+And then merge it with the first one by the column 'treatment':
+```{r}
+merge(df1, df2, by="treatment")
+```
+By default, merge() will keep only the shared values of 'treatment', but we can change this behaviour with all.x, all.y, or all:
+```{r}
+merge(df1, df2, by="treatment", all.x=TRUE)
+merge(df1, df2, by="treatment", all=TRUE)
+```
+We then may want to replace those NAs with zeros:
+```{r}
+df3 <- merge(df1, df2, by="treatment", all=TRUE)
+str(df3)  # note that the numbers are stored as factors
+df3$fish_count <- as.numeric(as.character(df3$fish_count))  # use both 'as numeric' and 'as character' to preserve the values
+df3$turtle_count <- as.numeric(as.character(df3$turtle_count))
+df3[is.na(df3)] <- 0
+df3
+```
+
+<br>
+
+### Aggregating dataframes
+
+Let's go back to our downloaded example data:
+```{r}
+head(surveys.sub)
+```
+We can see that there are multiple individuals of species *Chaetodipus baileyi* caught on various plots at certain times. You may want to know how many individuals were trapped per plot and month. The funciton 'aggregate' can be used to summarise data in this way.
+<br>
+Here, the function 'length' will count how many rows (individuals) there are for each month and plot_id combination:
+```{r}
+surveys.agg <- aggregate(surveys.sub$species_id, by = list(surveys.sub$month, surveys.sub$plot_id), FUN=length)
+colnames(surveys.agg) <- c("month", "plot_id", "count")
+head(surveys.agg)
+```
+
+You can also summarise with other functions. Say you wanted to know the mean weight per month and plot:
+```{r}
+surveys.agg <- aggregate(surveys.sub$weight, by = list(surveys.sub$month, surveys.sub$plot_id), FUN=mean)
+colnames(surveys.agg) <- c("month", "plot_id", "mean_weight")
+head(surveys.agg)
+```
+Then you could merge the SD:
+```{r}
+surveys.agg2 <- aggregate(surveys.sub$weight, by = list(surveys.sub$month, surveys.sub$plot_id), FUN=sd)
+colnames(surveys.agg2) <- c("month", "plot_id", "sd_weight")
+surveys.agg <- merge(surveys.agg, surveys.agg2, by=c("month","plot_id"), all=TRUE)
+head(surveys.agg)
+```
+
+<br>
+
+### Reshaping dataframes
+
+There may be cases where you want to switch your data between 'long' format and 'wide' format. In long format observations are repeated in rows, while in a wide format they are repeated in columns.
+We can use the library 'reshape2' for this. You'll need to install it if you haven't yet.
+The function 'dcast' takes a long-format dataframe and converts it to wide-format data 
+The function 'melt' takes a wide-format dataframe and converts it to long-format data 
+<br>
+Let's work with our counts of *Chaetodipus baileyi*
+``` {r, results='hide'}
+library(reshape2)
+
+surveys.agg <- aggregate(surveys.sub$species_id, by = list(surveys.sub$month, surveys.sub$plot_id), FUN=length)
+colnames(surveys.agg) <- c("month", "plot_id", "count")
+```
+
+You can cast this data to wide format:
+``` {r}
+surveys.cast <- dcast(data = surveys.agg, formula = month ~ plot_id, value.var = "count")
+surveys.cast
+```
+And vice-versa, this can be melted back into long format:
+``` {r}
+surveys.melt <- melt(data = surveys.cast, id.vars = "month", na.rm=T)
+head(surveys.melt)
+```
+
+<br>
+You can find more examples (and other ways to approach dataframe transformations) in this nice online tutorial:
+http://www.datacarpentry.org/R-ecology-lesson/03-dplyr.html
+
+ 
+<br>
+<br>
+
+## Visualising data
+Here we  start with creating simple plots to explore trends in data using the base graphics of R. Creating pretty figures for presentation in your thesis with the package 'ggplot' will be covered on June 29.
+
+### Histograms
+Histograms are a useful way to see how your data are distributed. Try this example:
+``` {r}
+hist(surveys.sub$weight)
+```
+
+<br>
+
+### Boxplots
+Boxplots are essential for data exploration and checking assumptions for statistical models. Always boxplot your data!
+
+```{r}
+boxplot(surveys.sub$weight)
+boxplot(weight~sex, data=surveys.sub, ylab='Weight', xlab='Sex') # uses formula notation y ~ x
+```
+
+Or we could boxplot at our counts by plot. Here we additionally add the treatment.
+```{r}
+surveys.agg <- aggregate(surveys.sub$species_id, by = list(surveys.sub$month, surveys.sub$plot_id, surveys.sub$plot_type), FUN=length)
+colnames(surveys.agg) <- c("month", "plot_id", "plot_type", "count")
+
+boxplot(count~plot_id, data=surveys.agg, ylab="Count of PB", xlab="Plot id")
+```
+
+ANd by treatment:
+```{r}
+boxplot(count~plot_type, data=surveys.agg, ylab="Count of PB", xlab="Plot id")
+```
+
+<br>
+
+### Scatterplots
+We can use the function 'plot' for simple scatterplots:
+```{r}
+plot(weight~hindfoot_length, data=surveys.sub)
+```
+
+There are many other graphical parameters that can be modified, for example:
+```{r}
+plot(weight~hindfoot_length, data=surveys.sub,
+     ylim=c(0,60),  # changing the y-axis limits of the plot
+     xlim=c(21,32), # change the x-axis limits 
+     col="blue",    # alter the colour of the data points
+     pch=16)        # change the point character
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
