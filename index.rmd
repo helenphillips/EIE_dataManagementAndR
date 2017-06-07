@@ -1,11 +1,13 @@
 ---
-title: "Main Page"
+title: "EIE Course"
 author: "Darren Gillig, Nathaly Rokssana Guerrero Ramirez and Helen Phillips"
 date: "June 6, 2017"
 output: html_document
 ---
-# Data Management and Introduction to R
+# Data Management and Basic R
 
-In the coming days the course notes for the EIE session on 8th June will appear.  
+The following links are for the EIE Course on 8th June 2017. The links will stay active (although may change over time), so feel free to keep coming back to them.
 
-Please check again later.
+* [Part 1: Data Management]()
+* [Part 2: Intro to R](https://helenphillips.github.io/EIE_dataManagementAndR/Helens_intro.html)
+* [Part 3: Data in R](https://helenphillips.github.io/EIE_dataManagementAndR/Data_management_Darren.html)
