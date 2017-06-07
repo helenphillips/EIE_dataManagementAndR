@@ -1,0 +1,330 @@
+---
+title: 'EIE course: Data Management and Basic R'
+author: "Darren Giling (darren.giling@idiv.de)"
+date: "8 June 2017"
+output: html_document
+---
+
+<br>
+
+You're now familiar with the R environment, the different types of objects, and some basic R functions. This worksheet is designed to teach you some of the most useful functions to inspect, manipulate and visualise your data. It also highlights some common pitfalls and how you can avoid them.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<br>
+``` {r surveys, echo = FALSE}
+surveys <- read.csv('C:/dg45koti/Dropbox/Teaching/iDiv EIE scientific working course/portal_data_joined.csv')
+# more info on the data: http://www.datacarpentry.org/R-ecology-lesson/02-starting-with-data.html
+```
+
+## 1. Summarising data
+Let's start with using functions to inspect the `survey` data in greater detail.
+
+<br>
+First, let's simplify the dataset a little bit just for our examples. Try this using the index notation you learned earlier, and assign the result to a new dataframe called `surveys.sub`.
+```{r}
+surveys.sub <- surveys[surveys$year==2002 & surveys$species_id=="PB",]  # subset to one year (2002) and one species_id (PB). Remember that text strings always need quotation marks.
+```
+
+<br>
+You can use the function `summary` to look at summary statistics of all variables in the subsetted dataframe. Look at how variables of different classes (e.g. `"factor"`" or `"numeric"`") are summarised differently.
+```{r}
+summary(surveys.sub)
+```
+
+<br>
+You can also perform functions on particular varibles within dataframes by selecting them with the `$` operator:
+```{r}
+mean(surveys.sub$weight)          # mean
+```
+Here, the mean is unexpectedly NA. If you check the help for mean (`?mean`), you'll see that the default logical value for the argument `na.rm` (i.e. NA remove) is FALSE. This means NA values are not automatically removed from the calculation. Try changing this default:
+``` {r}
+mean(surveys.sub$weight, na.rm=TRUE) # mean, with NAs ignored
+sd(surveys.sub$weight, na.rm=TRUE)   # standard deviation
+```
+<br>
+Another useful function for summarising factors is `tapply`. `tapply` applies a function (defined in the argument `FUN`) to a variable over the levels of a factor or factors defined by the argument `INDEX`:
+```{r}
+tapply(surveys.sub$weight, INDEX=surveys.sub$sex, FUN=mean, na.rm=T) # mean weight of different sexes
+```
+Just like you saw earlier, there is an empty factor level because some records do not contain gender. In some circumstances you may want to remove  rows with missing records. You can achieve this by subsetting to all rows that are not empty, using the operator `!=`, which stands for "does not equal". 
+```{r}
+levels(surveys.sub$sex)                               # inspect the levels of sex
+surveys.sub <- surveys.sub[surveys.sub$sex != "", ]   # "!=" means 'does not equal'
+levels(surveys.sub$sex)
+```
+You can see that even after you remove those rows, "" is still a level of the factor `surveys.sub$sex`. You can drop unused levels from factors with the function `droplevels`.
+```{r}
+surveys.sub$sex <- droplevels(surveys.sub$sex)        # drop the factor level "" from gender 
+levels(surveys.sub$sex)                               # now only two factor levels
+tapply(surveys.sub$weight, INDEX=surveys.sub$sex, FUN=mean, na.rm=T)
+```
+
+<br>
+<br>
+
+## 2. Manipulating dataframes
+A key strength of using R is its ability to easily manipulate large amounts of data. You should aim to store your raw data in csv files that you don't alter, and then perform all transformations, data merges etc within the R environment. That way, you cannot accidently alter your original data and you can easily reproduce your analyses or correct any mistakes. The following sections demonstrate some useful functions for manipulating dataframes.
+
+### 2.1 Binding vectors and dataframes
+You can bind together separate vectors and dataframes using `rbind` (for rows) and `cbind` (for columns). Try with this simple example fist. First, create two new vectors that represent 5 hypothetical samples labelled a to e, and the number of fish that were observed in those 5 samples. We can then bind them together as rows or columns.
+```{r}
+treatment <- c("a", "b", "c", "d", "e")
+fish_count <- c(1, 0, 3, 6, 2)
+rbind(treatment, fish_count)  # bind together rows
+cbind(treatment, fish_count)  # bind together columns
+```
+
+The resulting object is a matrix. You can change your matrix into a dataframe using the function `as.data.frame`. There are also other functions that can be used to change the class of objects, such as `as.factor`, `as.character` and `as.numeric`.
+```{r}
+matrix1 <- cbind(treatment, fish_count)  # bind together columns
+class(matrix1)
+df1 <- as.data.frame(matrix1)  # change matrix1 into a dataframe
+```
+
+Be careful when manipulating different classes of data at the same time, as sometimes the format of your data can change unexpectedly. For this reason, always examine your outputs with `str`. Notice in this case the numeric vector `fish_count` is now stored as a factor in the dataframe `df1`. To change this back to a number you must use the somewhat tedious combination of two functions: `as.numeric(as.character( ))`. Using only `as.numeric` will just change the factor into numbers that correspond to the factor levels, as shown here:
+```{r}
+str(df1)
+df1$fish_count
+as.numeric(df1$fish_count)  # change type to numeric. But this is INCORRECT, these are the factor levels in numeric form
+as.numeric(as.character(df1$fish_count))  # change to character, then to numeric. Produces the correct numbers
+df1$fish_count <- as.numeric(as.character(df1$fish_count)) # replace the factor with a numeric variable
+str(df1)
+```
+
+
+<br>
+
+
+Binding is handy when you have multiple dataframes that are formatted in exactly the same way. Say you have separate datasets from 2001 and 2002  You can see that they have the same structure using `str` or `names`, and inspect how many rows they have:
+```{r}
+surveys.2002 <- surveys[surveys$year==2002 & surveys$species_id=="PB",] 
+nrow(surveys.2002)
+surveys.2001 <- surveys[surveys$year==2001 & surveys$species_id=="PB",] 
+nrow(surveys.2001)
+```
+You could bind these together using `rbind`:
+```{r}
+surveys.all <- rbind(surveys.2001, surveys.2002)
+nrow(surveys.all)  # 892 + 538
+```
+`rbind` will not work if the columns of your dataframe do not match. Try this:
+```{r, eval=FALSE}
+surveys.2001 <- surveys.2001[,-2] # remove the second column from surveys.2001
+surveys.all <- rbind(surveys.2001, surveys.2002)
+```
+
+<br>
+
+### 2.2 Merging dataframes
+`merge` is a very useful function that joins two datasets together based on the values of a shared column or columns. This can be useful in many instances, for example, merging together datasets on species traits and their abundances in different samples. 
+
+Here we will do an example merge with two simple dataframes: the one from the example above (`df1`), and a new one that is the number of turtles identified in a series of samples (also identified with letters). See that some of the samples between `df1` and `df2` overlap, but not all.
+```{r}
+df2 <- as.data.frame(cbind(c("a","c","d","f","g"),10:14))  # create our second dataframe
+colnames(df2) <- c("treatment", "turtle_count")            # assign some column names
+df2$turtle_count <- as.numeric(as.character(df2$turtle_count)) # again, convert the count to numeric
+```
+Our aim is to merge these two dataframes, for instance to see if there is any relation between the number of fish and number of turtles in a sample. This is done with `merge`, where we provide the two dataframes in the arguments `x` and `y`, and the shared column we wish to make the merge by in the argument `by`. If you don't provide `by`, R will merge by any columns with matching names by default, but it is best to always be explicit.
+```{r}
+merge(x=df1, y=df2, by="treatment")
+```
+What do you notice about the dimensions of the output? (Hint: for larger objects you can use the functions `nrow` or `dim` to check dimensions)
+By default, `merge` will keep only the values of `treatment` that are shared by dataframes `x` and `y`. We can change this behaviour with the arguments `all.x`, `all.y`, or `all`. See `?merge` for details.
+```{r}
+merge(x=df1, y=df2, by="treatment", all.x=TRUE)  # keep all levels of treatment in x, and add any corresponding values from y
+merge(x=df1, y=df2, by="treatment", all=TRUE)    # keep all levels of both x and y
+```
+You'll see that where there is no matching data, R inserts NA values. In some cases, such as this one, those NAs actually meant there were no turtles or fish sampled, so we could replace them with zeros.  But this is not always the case! Imagine our data were lengths instead, would it be appropriate to replace the NA values?
+```{r}
+df3 <- merge(df1, df2, by="treatment", all=TRUE)
+df3[is.na(df3)] <- 0  # here is.na() does a logical check on whether each cell is an NA or not. If the answer is TRUE, it is replaced with a 0
+df3
+```
+
+<br>
+
+### 2.3 Aggregating dataframes
+Aggregating is a powerful way to collapse dataframes according to one or more variable.
+
+For this example, let's go back to our subsetted data `surveys.sub`:
+```{r}
+head(surveys.sub)
+```
+You can see that there are multiple individuals of species *Chaetodipus baileyi* identified on the same plot at the same time. You may want to know how many individuals were trapped per plot and month. The funciton `aggregate` can be used to summarise data in this way.
+<br>
+Unlike `merge`, the function aggregate requires the argument `by` to be passed a "list". The function is provided to the argument `FUN`, just like `tapply`. Here, the function `length` will count how many rows of `species_id` (i.e. individuals) there are for each `month` and `plot_id` combination, and store the new dataframe as `surveys.agg`:
+```{r}
+surveys.agg <- aggregate(surveys.sub$species_id, by = list(surveys.sub$month, surveys.sub$plot_id), FUN=length)
+colnames(surveys.agg) <- c("month", "plot_id", "count") # we normally need to reassign column names after aggregating
+head(surveys.agg)
+```
+
+You can aggregate with any function. Say you wanted to know the mean weight per month and plot:
+```{r}
+surveys.agg1 <- aggregate(surveys.sub$weight, by = list(surveys.sub$month, surveys.sub$plot_id), FUN=mean)
+colnames(surveys.agg1) <- c("month", "plot_id", "mean_weight") # assign some column names
+head(surveys.agg1)
+```
+
+You can pass a whole dataframe (or part of a dataframe) to `aggregate`. This can be used to quickly summarise many response variables. Try this example where we aggregate both `hindfoot_length` and `weight` by selecting those columns using the index notation `surveys.sub[,8:9]` (i.e. all rows and the 8th and 9th columns). 
+```{r}
+surveys.agg3 <- aggregate(surveys.sub[,8:9], by = list(surveys.sub$month, surveys.sub$plot_id), FUN=mean)
+colnames(surveys.agg3) <- c("month", "plot_id", "mean_hindfoot_length", "mean_weight") # we need to rename our columns
+head(surveys.agg3)
+```
+Be aware that often a function doesn't make sense for every class of variable in your dataframe. Try aggregating a subset of the dataframe that includes a factor such as `species_id`. It does not make sense to take the mean of a factor, so you will receive a warning and the output for that variable will be NAs.
+```{r, eval=FALSE}
+aggregate(surveys.sub[,7:9], by = list(surveys.sub$month, surveys.sub$plot_id), FUN=mean)
+```
+
+<br>
+<br>
+
+### 2.4 Reshaping dataframes
+
+As you've learnt today, it is preferred to store your data with observations in rows. A good example is our survey data, where each individual is one row and there are columns that identify the plot, weight, species_id etc. This type of data is called 'long-format' data. Here is a simple example:
+
+| Site | Species | Count |
+|:---:|:---:|:---:|  
+| 1 | A | 3 | 
+| 1 | B | 1 | 
+| 2 | A | 3 | 
+| 2 | B | 10 | 
+| 2 | C | 5 | 
+
+<br>
+The alternative format is 'wide-format' data. This is where different identifying variables (e.g. sites, samples or species) are stored in separate columns. Here is exactly the same data stored in wide format: 
+
+| Site | Species_A | Species_B | Species_C |
+|:------:|:------:| :------:| :------:| 
+| 1 | 3| 1 | 0 | 
+| 2 | 3 | 10 | 5| 
+
+<br>
+The wide format is commonly used, but it is not very useful for large datasets with many types of variables or for merging and aggregating data. What should you do if you have wide format data but you want it in long format? 
+For this, you can use the library `reshape2`. You'll need to first install this package (hint: use `install.packages`).
+
+`reshape2` has two main functions:
+
+* `Melt` converts from wide format to long format
+* `Cast` converts from long format to wide format
+
+Imagine that you are working with metal: you `melt` your data into rows with unique identifying combinations, and can then `cast` it into whatever mould you like.
+
+<br> 
+Start with the simple wide dataframe from above. Then, use melt to convert it into long format. The argument `id.vars` tells the function which variables are your identifying column(s).
+```{r}
+library(reshape2)
+wide.data <- data.frame(Site=c(1,2), Species_A=c(3,3), Species_B=c(1,10), Species_C=c(0,5))  # create the sample data
+long.data <- melt(data = wide.data, id.vars = "Site")  # melt into long format
+colnames(long.data) <- c("Site", "Species", "Count")   # we need to provide some new column names
+long.data 
+```
+
+You can then mould it into a different shape with `cast`. If you examine `?cast` you will see that there are actually multiple `cast` functions. We should use the function `dcast` if we want our output to be a dataframe.
+
+Let's convert it back to the wide format. `dcast` is a little more complicated than `melt`. We need to provide a `formula` in the format of "id variables ~ measured variables". The "~" means "is as function of", but don't worry too much about that for now. We also provide the name of the variable we wish to cast to the argument `value.var`. For more complicated dataframes this can take a little thought and sometimes some experimenting.
+```{r}
+wide.data <- dcast(data = long.data, formula = Site ~ Species, value.var = "Count")
+wide.data
+```
+
+<br>
+Let's do another example, working with a larger dataframe - our aggregated counts of *Chaetodipus baileyi*.
+``` {r, results='hide'}
+surveys.agg <- aggregate(surveys.sub$species_id, by = list(surveys.sub$month, surveys.sub$plot_id), FUN=length)
+colnames(surveys.agg) <- c("month", "plot_id", "count")
+```
+
+You can cast this long-format data to wide format. Here we instruct `dcast` to put `month` in rows and `plot_id` in columns. `count` of *Chaetodipus baileyi* is our value variable. The NAs occur when there was no count data for a `month`/`plot_id` combination.
+``` {r}
+surveys.wide <- dcast(data = surveys.agg, formula = month ~ plot_id, value.var = "count")
+surveys.wide
+```
+And then this can be melted back into long format:
+``` {r}
+surveys.long <- melt(data = surveys.wide, id.vars = "month", na.rm=T)
+head(surveys.long)
+```
+
+
+<br>
+<br>
+
+## 3. Visualising data
+Now that you've learnt how to import, merge, aggregate and summarise your data, let's actually have a look at them! Effectively visualising your data is essential to understanding them, presenting them to others and interpreting any statistical analyses. 
+
+Here we  start with creating simple plots to explore trends in data using the base graphics of R. Creating pretty figures for presentation in your thesis with the package `ggplot2` will be covered on June 29.
+
+### Histograms
+Histograms are a simple and useful way to see how your data are distributed. Try this example:
+``` {r}
+hist(surveys.sub$weight)
+```
+
+<br>
+
+### Boxplots
+Boxplots are extremely handy for data exploration and checking the assumptions of statistical models. Always boxplot your data!
+```{r}
+boxplot(surveys.sub$weight)
+```
+
+You may want to produce boxplots of continuous data at different levels of a factor. Here you'll see again the formula notation that uses the tilde - "~". Whenever you see this it represents an equation y~x, which means "y is modelled as a function of x".
+In our case we want to see how weight varies over the levels of sex, so we use `weight ~ sex`. 
+```{r}
+boxplot(weight ~ sex, data=surveys.sub, ylab='Weight', xlab='Sex') # uses the formula notation y ~ x
+```
+
+Above we have also provided some additional arguments. We have defined text for the y and x labels with `ylab` and `xlab` respectively.
+We have also provided the dataframe to the `data` argument. `boxplot(weight ~ sex, data=surveys.sub)` is just a shorthand way of writing `boxplot(surveys.sub$weight ~ surveys.sub$sex)`
+
+<br>
+Or we could boxplot at our counts by experimental plot. 
+```{r}
+surveys.agg <- aggregate(surveys.sub$species_id, by = list(surveys.sub$month, surveys.sub$plot_id, surveys.sub$plot_type), FUN=length)
+colnames(surveys.agg) <- c("month", "plot_id", "plot_type", "count")
+boxplot(count~plot_id, data=surveys.agg, ylab="Count of PB", xlab="Plot id")
+```
+
+Tis shows that the count of *Chaetodipus baileyi* on each plot varied quite distinctly in 2002.
+
+<br>
+
+### Scatterplots
+Scatterplots are the basic plot for looking at relationships between two continuous variables. We use the function `plot` for simple scatterplots:
+```{r}
+plot(weight ~ hindfoot_length, data=surveys.sub)  # remember y ~ x
+```
+
+What is immediately noticeable on this plot? 
+
+We can identify a clear outlier, an individual we shall call 'bigfoot'. Obviously, bigfoot falls outside the typical range of the length-weight relationship, so it would be wise to try and determine if this value of hindfoot_length is a measurement or input error.
+
+There are many other graphical parameters that can be modified, for example:
+```{r}
+plot(weight~hindfoot_length, data=surveys.sub,
+     ylim=c(0,65),  # change the y-axis limits
+     xlim=c(21,32), # change the x-axis limits 
+     col="tomato",  # change the colour of the data points
+     pch=16)        # change the point character
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
