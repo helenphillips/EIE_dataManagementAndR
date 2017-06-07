@@ -8,6 +8,6 @@ output: html_document
 
 The following links are for the EIE Course on 8th June 2017. The links will stay active (although may change over time), so feel free to keep coming back to them.
 
-* [Part 1: Data Management]()
+* [Part 1: Data Management](https://helenphillips.github.io/EIE_dataManagementAndR/Data_Management_Course_2017.html)
 * [Part 2: Intro to R](https://helenphillips.github.io/EIE_dataManagementAndR/Helens_intro.html)
 * [Part 3: Data in R](https://helenphillips.github.io/EIE_dataManagementAndR/Data_management_Darren.html)
