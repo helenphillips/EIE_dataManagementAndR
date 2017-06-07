@@ -462,12 +462,36 @@ This will bring up the relevant help page.
 
 We can use the help page for `mean` to try and understand how to use this function.
 
+### Important bits on the help page
+![](Pics/meanhelp_2.png)
 
+AT the top of the page is the name of the function, and in the {brackets} is the __library__ that the function is from. In this case, the `mean` function is in base R, and is always available without having to load any additional libraries. Check that you have the right function by reading the short __Description__. 
 
+![](Pics/meanhelp_3.png)
 
+The __Usage__ section will show how the function is used, including the arguments it needs, and the default for the arguments (if they have them). Underneath _usage_ is __Arguments__ which explains more about the what each argument should be, and, if they have default values, what they are. In the case of `mean`, the first argument `x` is needed, and it has no default. When we use the function we would need to replace `x` with an object (such as a vector). The default for the  `na.rm` argument is `FALSE`.
+
+![](Pics/meanhelp_4.png)
+
+The __Value__ section explains what to expect from the function. In this case, it also explains what to expect if you change the values in some of the arguments.
+
+![](Pics/meanhelp_5.png)
+
+Finally, the __Examples__ section gives code that showcases how the function works. All code provided in the example will run with no additional input. It's always a good idea to copy and paste this into your console, and try and figure out what is happening in every line.
 
 
 ## I am stuck. I get an error message that I don't understand
-Start by googling the error message. However, this doesn't always work very well because often, package developers rely on the error catching provided by R. As you may have a general error messages that might not be very helpful to diagnose a problem (e.g. "subscript out of bounds"). If the message is very generic, you might also include the name of the function or package you're using in your query.
+Start by googling the error message. However, this doesn't always work very well because often package developers rely on the error catching provided by R. As you may have a general error messages that might not be very helpful to diagnose a problem (e.g. "subscript out of bounds"). If the message is very generic, you might also include the name of the function or package you're using in your query.
 
 However, you should check [Stack Overflow](https://stackoverflow.com/). Search using the `[r]` tag. Most questions have already been answered, but the challenge is to use the right words in the search to find the answers: [http://stackoverflow.com/questions/tagged/r](http://stackoverflow.com/questions/tagged/r)
+
+***
+# More Resources
+
+There are many websites and books that provide good introductions to R:
+
+* [The Data Carpentry website: http://www.datacarpentry.org/R-ecology-lesson/](http://www.datacarpentry.org/R-ecology-lesson/) (where a lot of this material was taken from) provides a very nice overview of R (and other skills useful for ecology)
+* [TryR: http://tryr.codeschool.com/](http://tryr.codeschool.com/) is an online platform for learning some basic R code
+* [DataCamp: https://www.datacamp.com/courses/free-introduction-to-r](https://www.datacamp.com/courses/free-introduction-to-r)   provides online course for R (for all levels of experience)
+* And if you would prefer your R to have more cats, try [RforCats: https://rforcats.net/](https://rforcats.net/)
+
