@@ -288,7 +288,7 @@ We are going to use the dataset that we used earlier in this session. So we need
 surveys <- read.csv('data/portal_data_joined.csv')
 ```
 
-This statement doesn't produce any output because assignments don't display anything. If we want to check that our data has been loaded, we could type `surveys` to see the whole dataset, but that might produce a lot of output to the screen, so instead we can print the first six lines of the dataset using the function `head()`. `head()` takes the object name of a data as the first arguement.
+This statement doesn't produce any output because assignments don't display anything. If we want to check that our data has been loaded, we could type `surveys` to see the whole dataset, but that might produce a lot of output to the screen, so instead we can print the first six lines of the dataset using the function `head()`. `head()` takes the object name of a data as the first argument.
 
 ```{r}
 head(surveys)
@@ -421,7 +421,7 @@ So far all the functions we have used have been in 'base' R, i.e., functions tha
 
 Functions are often packaged and released as 'libraries' from the __CRAN repository__, with one library containing multiple functions that deal with specific problems, tasks or workflows.
 
-In later sessions you will use the library ``ggplot2`` to create figures in R. Let's install the library. This can be done with the `install.packages` function, which takes the name of the library as the first arguement:
+In later sessions you will use the library ``ggplot2`` to create figures in R. Let's install the library. This can be done with the `install.packages` function, which takes the name of the library as the first argument:
 ```{r eval = FALSE}
 install.packages("ggplot2")
 ```

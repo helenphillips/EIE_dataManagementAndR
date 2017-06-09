@@ -332,7 +332,7 @@ animals[animals == &quot;cat&quot; | animals == &quot;rat&quot;] # returns both 
 <h1>Working with datasets</h1>
 <p>We are going to use the dataset that we used earlier in this session. So we need to load the .csv file into R. We will use the function <code>read.csv</code>, assigning the dataset to the name <em>surveys</em>.</p>
 <pre class="r"><code>surveys &lt;- read.csv('data/portal_data_joined.csv')</code></pre>
-<p>This statement doesn’t produce any output because assignments don’t display anything. If we want to check that our data has been loaded, we could type <code>surveys</code> to see the whole dataset, but that might produce a lot of output to the screen, so instead we can print the first six lines of the dataset using the function <code>head()</code>. <code>head()</code> takes the object name of a data as the first arguement.</p>
+<p>This statement doesn’t produce any output because assignments don’t display anything. If we want to check that our data has been loaded, we could type <code>surveys</code> to see the whole dataset, but that might produce a lot of output to the screen, so instead we can print the first six lines of the dataset using the function <code>head()</code>. <code>head()</code> takes the object name of a data as the first argument.</p>
 <pre class="r"><code>head(surveys)</code></pre>
 <pre><code>##   record_id month day year plot_id species_id sex hindfoot_length weight
 ## 1         1     7  16 1977       2         NL   M              32     NA
@@ -521,7 +521,7 @@ levels(sex)</code></pre>
 <h1>Libraries</h1>
 <p>So far all the functions we have used have been in ‘base’ R, i.e., functions that are always available to you in R. However, useful functions also exist that don’t come pre-installed with R, but we might want to use them.</p>
 <p>Functions are often packaged and released as ‘libraries’ from the <strong>CRAN repository</strong>, with one library containing multiple functions that deal with specific problems, tasks or workflows.</p>
-<p>In later sessions you will use the library <code>ggplot2</code> to create figures in R. Let’s install the library. This can be done with the <code>install.packages</code> function, which takes the name of the library as the first arguement:</p>
+<p>In later sessions you will use the library <code>ggplot2</code> to create figures in R. Let’s install the library. This can be done with the <code>install.packages</code> function, which takes the name of the library as the first argument:</p>
 <pre class="r"><code>install.packages(&quot;ggplot2&quot;)</code></pre>
 <p>This function downloads the library from the CRAN repository onto our computer, <em>you will only need to download a library once</em>.</p>
 <p>Alternatively, you can use the <strong>Packages</strong> tab on the <strong>Files/Plots/Packages/Help/Viewer</strong> panel. Scroll until you find <code>ggplot2</code>, and click in the box. This will download and the load the library into your R.</p>
